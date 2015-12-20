@@ -19,6 +19,8 @@ class NFXListController: NFXGenericController, UITableViewDelegate, UITableViewD
     var filteredTableData = [NFXHTTPModel]()
     
     var searchController: UISearchController!
+
+    var hideButtonTappedCallback :(() -> Void)?
     
     // MARK: View Life Cycle
     
@@ -86,6 +88,22 @@ class NFXListController: NFXGenericController, UITableViewDelegate, UITableViewD
         var settingsController: NFXSettingsController
         settingsController = NFXSettingsController()
         self.navigationController?.pushViewController(settingsController, animated: true)
+    }
+
+    func setHideButton(callback :() -> Void)
+    {
+        hideButtonTappedCallback = callback
+
+        let hideButton = UIButton(frame: CGRectMake(0, CGRectGetHeight(self.view.frame), CGRectGetWidth(self.view.frame), 44))
+        hideButton.addTarget(self, action: "hideButtonTapped", forControlEvents: UIControlEvents.TouchUpInside)
+        self.view.addSubview(hideButton)
+    }
+
+    @objc private func hideButtonTapped()
+    {
+        if let callback = hideButtonTappedCallback {
+            callback()
+        }
     }
     
     // MARK: UISearchResultsUpdating
